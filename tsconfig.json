@@ -2,14 +2,19 @@
         // Visit https://aka.ms/tsconfig to read more about this file
         "compilerOptions": {
                 // File Layout
-                "rootDir": "./src",
-                "outDir": "./dist",
+                // "rootDir": "./src",
+                // "outDir": "./dist",
 
                 // For nodejs:
                 "lib": ["ES2024"],
-                "module": "nodenext",
-                "target": "ES2024",
                 "types": ["node"],
+
+                // Prisma
+                "module": "ESNext",
+                "moduleResolution": "bundler",
+                "target": "ES2023",
+                "esModuleInterop": true,
+                "ignoreDeprecations": "6.0",
 
                 // Other Outputs
                 "sourceMap": true,
