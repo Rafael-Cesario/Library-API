@@ -6,3 +6,30 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Book {
+  id          String   @id @default(uuid())
+  title       String
+  pages       Int
+  publishedAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  authors Author[]
+
+  @@map("books")
+}
+
+model Author {
+  id   String  @id @default(uuid())
+  name String
+  bio  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  books Book[]
+
+  @@map("authors")
+}

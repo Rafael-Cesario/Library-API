@@ -1,0 +1,8 @@
+Title: Library API
+Date: 2026/06/02
+
+- Typescript, Express, .env*
+- Prisma, Docker, Postgres
+- Database Entities
+- Prisma migrations
+x CRUD ...
