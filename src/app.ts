@@ -1,12 +1,10 @@
-import Express, { json } from 'express';
-import type { Request, Response } from 'express';
+import Express, { json } from "express";
+import { authorRoutes } from "./routes/authorRoutes";
 
 const app = Express();
 
 app.use(json());
 
-app.get('/', (_req: Request, res: Response) => {
-        res.status(200).json({ message: 'server on' });
-});
+app.use("/authors", authorRoutes);
 
 export default app;
