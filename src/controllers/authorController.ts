@@ -7,9 +7,8 @@ export class AuthorController {
 
         async create(req: Request, res: Response) {
                 const data: CreateAuthor = req.body;
-
                 const author = await this.authorService.create(data);
-
+                
                 res.status(200).json(author);
         }
 }
