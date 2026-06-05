@@ -7,7 +7,7 @@
 
                 // For nodejs:
                 "lib": ["ES2024"],
-                "types": ["node"],
+                "types": ["node", "vitest/globals"],
 
                 // Prisma
                 "module": "ESNext",
@@ -40,6 +40,6 @@
                 "isolatedModules": true,
                 "noUncheckedSideEffectImports": true,
                 "moduleDetection": "force",
-                "skipLibCheck": true
+                "skipLibCheck": true,
         }
 }

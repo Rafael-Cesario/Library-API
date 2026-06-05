@@ -5,4 +5,11 @@ Date: 2026/06/02
 - Prisma, Docker, Postgres
 - Database Entities
 - Prisma migrations
-x CRUD ...
+
+Author
+    x Create
+    x Read
+    x ReadOne
+    x Update
+    x Delete
+    x Tests
