@@ -9,6 +9,6 @@ export class AuthorController {
                 const data: CreateAuthor = req.body;
                 const author = await this.authorService.create(data);
                 
-                res.status(200).json(author);
+                res.status(201).json(author);
         }
 }
