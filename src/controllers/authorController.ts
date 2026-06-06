@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import type { CreateAuthor } from "../interfaces/authorInterface";
+import type { CreateAuthor, UpdateAuthor } from "../interfaces/authorInterface";
 import type { AuthorService } from "../services/authorService";
 
 export class AuthorController {
@@ -19,6 +19,12 @@ export class AuthorController {
         async readOne(req: Request, res: Response) {
                 const id = req.params["id"] as string;
                 const author = await this.authorService.readOne(id);
+                res.status(200).json(author);
+        }
+
+        async update(req: Request, res: Response) {
+                const data: UpdateAuthor = req.body;
+                const author = await this.authorService.update(data);
                 res.status(200).json(author);
         }
 }

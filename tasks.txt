@@ -11,6 +11,6 @@ Author
     - Create + tests
     - Read + tests
     - ReadOne + tests
-    x Update
+    - Update
     x Delete
     

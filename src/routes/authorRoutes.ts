@@ -9,5 +9,6 @@ const authorController = new AuthorController(authorService);
 route.post("/", (req, res) => authorController.create(req, res));
 route.get("/", (req, res) => authorController.read(req, res));
 route.get("/:id", (req, res) => authorController.readOne(req, res));
+route.put("/", (req, res) => authorController.update(req, res));
 
 export { route as authorRoutes };
