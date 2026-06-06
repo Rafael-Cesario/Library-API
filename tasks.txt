@@ -3,13 +3,14 @@ Date: 2026/06/02
 
 - Typescript, Express, .env*
 - Prisma, Docker, Postgres
-- Database Entities
+- Database Entities ( authors, books )
 - Prisma migrations
+- Vitest configs, setup file
 
 Author
-    x Create
-    x Read
+    - Create + tests
+    > Read
     x ReadOne
     x Update
     x Delete
-    x Tests
+    
