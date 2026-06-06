@@ -14,4 +14,20 @@ export class AuthorService {
 
                 return author;
         }
+
+        async read() {
+                const authors = await prisma.author.findMany({});
+                return authors;
+        }
+
+        async readOne(id: string) {
+                const author = await prisma.author.findUnique({
+                        where: { id },
+                        include: { books: true },
+                });
+
+                if (!author) throw new CustomError(AUTHOR_ERRORS.notFound);
+
+                return author;
+        }
 }
