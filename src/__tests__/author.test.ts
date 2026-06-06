@@ -11,6 +11,26 @@ describe("Author Routes", () => {
                 return response;
         };
 
+        const readAuthor = async () => {
+                const response = await request(app).get("/authors");
+                return response;
+        };
+
+        const readOneAuthor = async (id: string) => {
+                const response = await request(app).get(`/authors/${id}`);
+                return response;
+        };
+
+        const createManyAuthors = async (total: number) => {
+                const promises = [];
+
+                for (let i = 0; i < total; i++) {
+                        promises.push(createAuthor({ name: faker.person.fullName(), bio: faker.lorem.paragraph() }));
+                }
+
+                await Promise.all(promises);
+        };
+
         describe("Create", () => {
                 it("Should create a new author", async () => {
                         const data: CreateAuthor = { name: faker.person.fullName(), bio: faker.lorem.paragraph({ min: 1, max: 3 }) };
@@ -55,6 +75,65 @@ describe("Author Routes", () => {
 
                         await createAuthor(data);
                         const response = await createAuthor(data);
+
+                        expect(response.status).toBe(status);
+                        expect(response.body).toEqual(body);
+                });
+        });
+
+        describe("Read", () => {
+                it("Gets ten authors", async () => {
+                        await createManyAuthors(10);
+
+                        const response = await readAuthor();
+
+                        expect(response.status).toBe(200);
+                        expect(response.body.length).toBe(10);
+
+                        expect(response.body[0]).toEqual(
+                                expect.objectContaining({
+                                        id: expect.any(String),
+                                        name: expect.any(String),
+                                        bio: expect.any(String),
+                                        createdAt: expect.any(String),
+                                        updatedAt: expect.any(String),
+                                }),
+                        );
+                });
+
+                it("Gets an empty array", async () => {
+                        const response = await readAuthor();
+
+                        expect(response.status).toBe(200);
+                        expect(response.body).toEqual([]);
+                });
+        });
+
+        describe("ReadOne", () => {
+                it("Reads one author", async () => {
+                        let response = await createAuthor({ name: faker.person.fullName(), bio: faker.lorem.paragraph() });
+                        const id = response.body.id;
+
+                        response = await readOneAuthor(id);
+
+                        expect(response.status).toBe(200);
+
+                        expect(response.body).toEqual(
+                                expect.objectContaining({
+                                        id: expect.any(String),
+                                        name: expect.any(String),
+                                        bio: expect.any(String),
+                                        createdAt: expect.any(String),
+                                        updatedAt: expect.any(String),
+                                        books: expect.any(Array),
+                                }),
+                        );
+                });
+
+                it("Author not found", async () => {
+                        const id = faker.string.uuid();
+                        const response = await readOneAuthor(id);
+                        const { status, ...body } = AUTHOR_ERRORS.notFound;
 
                         expect(response.status).toBe(status);
                         expect(response.body).toEqual(body);
