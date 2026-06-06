@@ -9,8 +9,8 @@ Date: 2026/06/02
 
 Author
     - Create + tests
-    > Read
-    x ReadOne
+    - Read + tests
+    - ReadOne + tests
     x Update
     x Delete
     

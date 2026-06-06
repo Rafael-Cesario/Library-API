@@ -1,40 +1,16 @@
-import app from "../app";
-import request from "supertest";
 import { faker } from "@faker-js/faker";
 import { prisma } from "../prisma";
 import { AUTHOR_ERRORS } from "../errors/authorErrors";
+import { AuthorRequests } from "./utils/authorRequests";
 import type { CreateAuthor } from "../interfaces/authorInterface";
 
 describe("Author Routes", () => {
-        const createAuthor = async (data: Partial<CreateAuthor>) => {
-                const response = await request(app).post("/authors").send(data);
-                return response;
-        };
-
-        const readAuthor = async () => {
-                const response = await request(app).get("/authors");
-                return response;
-        };
-
-        const readOneAuthor = async (id: string) => {
-                const response = await request(app).get(`/authors/${id}`);
-                return response;
-        };
-
-        const createManyAuthors = async (total: number) => {
-                const promises = [];
-
-                for (let i = 0; i < total; i++) {
-                        promises.push(createAuthor({ name: faker.person.fullName(), bio: faker.lorem.paragraph() }));
-                }
-
-                await Promise.all(promises);
-        };
+        const authorRequests = new AuthorRequests();
 
         describe("Create", () => {
                 it("Should create a new author", async () => {
                         const data: CreateAuthor = { name: faker.person.fullName(), bio: faker.lorem.paragraph({ min: 1, max: 3 }) };
-                        const response = await createAuthor(data);
+                        const response = await authorRequests.create(data);
                         const author = await prisma.author.findFirst({ where: { name: data.name } });
 
                         expect(author).not.toBeNull();
@@ -55,7 +31,7 @@ describe("Author Routes", () => {
 
                 it("Request Body is invalid", async () => {
                         const data = { name: "" };
-                        const response = await createAuthor(data);
+                        const response = await authorRequests.create(data);
 
                         expect(response.status).toBe(400);
 
@@ -73,8 +49,8 @@ describe("Author Routes", () => {
                         const data = { name: faker.person.fullName(), bio: faker.lorem.paragraph() };
                         const { status, ...body } = AUTHOR_ERRORS.duplicated;
 
-                        await createAuthor(data);
-                        const response = await createAuthor(data);
+                        await authorRequests.create(data);
+                        const response = await authorRequests.create(data);
 
                         expect(response.status).toBe(status);
                         expect(response.body).toEqual(body);
@@ -83,9 +59,9 @@ describe("Author Routes", () => {
 
         describe("Read", () => {
                 it("Gets ten authors", async () => {
-                        await createManyAuthors(10);
+                        await authorRequests.createMany(10);
 
-                        const response = await readAuthor();
+                        const response = await authorRequests.read();
 
                         expect(response.status).toBe(200);
                         expect(response.body.length).toBe(10);
@@ -102,7 +78,7 @@ describe("Author Routes", () => {
                 });
 
                 it("Gets an empty array", async () => {
-                        const response = await readAuthor();
+                        const response = await authorRequests.read();
 
                         expect(response.status).toBe(200);
                         expect(response.body).toEqual([]);
@@ -111,10 +87,10 @@ describe("Author Routes", () => {
 
         describe("ReadOne", () => {
                 it("Reads one author", async () => {
-                        let response = await createAuthor({ name: faker.person.fullName(), bio: faker.lorem.paragraph() });
+                        let response = await authorRequests.create({ name: faker.person.fullName(), bio: faker.lorem.paragraph() });
                         const id = response.body.id;
 
-                        response = await readOneAuthor(id);
+                        response = await authorRequests.readOne(id);
 
                         expect(response.status).toBe(200);
 
@@ -132,7 +108,7 @@ describe("Author Routes", () => {
 
                 it("Author not found", async () => {
                         const id = faker.string.uuid();
-                        const response = await readOneAuthor(id);
+                        const response = await authorRequests.readOne(id);
                         const { status, ...body } = AUTHOR_ERRORS.notFound;
 
                         expect(response.status).toBe(status);

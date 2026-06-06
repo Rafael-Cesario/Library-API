@@ -5,7 +5,7 @@ export default defineConfig({
                 globals: true,
                 environment: "node",
                 include: ["**/*.test.ts"],
-                setupFiles: ["./src/__tests__/setup.ts"],
+                setupFiles: ["./src/__tests__/utils/setup.ts"],
                 maxWorkers: 1,
                 isolate: false,
         },
