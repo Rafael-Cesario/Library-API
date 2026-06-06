@@ -12,5 +12,5 @@ Author
     - Read + tests
     - ReadOne + tests
     - Update
-    x Delete
+    > Delete
     

@@ -1,7 +1,7 @@
 import request from "supertest";
 import app from "../../app";
 import { faker } from "@faker-js/faker";
-import type { CreateAuthor } from "../../interfaces/authorInterface";
+import type { CreateAuthor, UpdateAuthor } from "../../interfaces/authorInterface";
 
 export class AuthorRequests {
         async create(data: Partial<CreateAuthor>) {
@@ -26,6 +26,11 @@ export class AuthorRequests {
 
         async readOne(id: string) {
                 const response = await request(app).get(`/authors/${id}`);
+                return response;
+        }
+
+        async update(data: Partial<UpdateAuthor>) {
+                const response = await request(app).put("/authors").send(data);
                 return response;
         }
 }

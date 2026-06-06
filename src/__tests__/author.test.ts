@@ -2,13 +2,13 @@ import { faker } from "@faker-js/faker";
 import { prisma } from "../prisma";
 import { AUTHOR_ERRORS } from "../errors/authorErrors";
 import { AuthorRequests } from "./utils/authorRequests";
-import type { CreateAuthor } from "../interfaces/authorInterface";
+import type { CreateAuthor, UpdateAuthor } from "../interfaces/authorInterface";
 
 describe("Author Routes", () => {
         const authorRequests = new AuthorRequests();
 
         describe("Create", () => {
-                it("Should create a new author", async () => {
+                test("Should create a new author", async () => {
                         const data: CreateAuthor = { name: faker.person.fullName(), bio: faker.lorem.paragraph({ min: 1, max: 3 }) };
                         const response = await authorRequests.create(data);
                         const author = await prisma.author.findFirst({ where: { name: data.name } });
@@ -29,7 +29,7 @@ describe("Author Routes", () => {
                         );
                 });
 
-                it("Request Body is invalid", async () => {
+                test("Request Body is invalid", async () => {
                         const data = { name: "" };
                         const response = await authorRequests.create(data);
 
@@ -45,7 +45,7 @@ describe("Author Routes", () => {
                         );
                 });
 
-                it("Can not create an author with the same name", async () => {
+                test("Can not create an author with the same name", async () => {
                         const data = { name: faker.person.fullName(), bio: faker.lorem.paragraph() };
                         const { status, ...body } = AUTHOR_ERRORS.duplicated;
 
@@ -58,7 +58,7 @@ describe("Author Routes", () => {
         });
 
         describe("Read", () => {
-                it("Gets ten authors", async () => {
+                test("Gets ten authors", async () => {
                         await authorRequests.createMany(10);
 
                         const response = await authorRequests.read();
@@ -77,7 +77,7 @@ describe("Author Routes", () => {
                         );
                 });
 
-                it("Gets an empty array", async () => {
+                test("Gets an empty array", async () => {
                         const response = await authorRequests.read();
 
                         expect(response.status).toBe(200);
@@ -86,7 +86,7 @@ describe("Author Routes", () => {
         });
 
         describe("ReadOne", () => {
-                it("Reads one author", async () => {
+                test("Reads one author", async () => {
                         let response = await authorRequests.create({ name: faker.person.fullName(), bio: faker.lorem.paragraph() });
                         const id = response.body.id;
 
@@ -106,10 +106,68 @@ describe("Author Routes", () => {
                         );
                 });
 
-                it("Author not found", async () => {
+                test("Author not found", async () => {
                         const id = faker.string.uuid();
                         const response = await authorRequests.readOne(id);
                         const { status, ...body } = AUTHOR_ERRORS.notFound;
+
+                        expect(response.status).toBe(status);
+                        expect(response.body).toEqual(body);
+                });
+        });
+
+        describe("Update", () => {
+                test("Updates an author", async () => {
+                        const data = { name: faker.person.fullName(), bio: faker.lorem.paragraph() };
+                        const oldAuthor = (await authorRequests.create(data)).body;
+
+                        const response = await authorRequests.update({
+                                id: oldAuthor.id,
+                                name: faker.person.fullName(),
+                                bio: faker.lorem.paragraph(),
+                        });
+
+                        const newAuthor = response.body;
+
+                        expect(response.status).toBe(200);
+                        expect(oldAuthor).not.toEqual(newAuthor);
+                });
+
+                test("Request body is invalid", async () => {
+                        const response = await authorRequests.update({ id: "123", name: "" });
+
+                        expect(response.status).toBe(400);
+
+                        expect(response.body).toEqual(
+                                expect.objectContaining({
+                                        fieldErrors: {
+                                                id: ["Invalid UUID"],
+                                                name: ["Too small: expected string to have >=3 characters"],
+                                                bio: ["Invalid input: expected string, received undefined"],
+                                        },
+                                }),
+                        );
+                });
+
+                test("Author not found", async () => {
+                        const data: UpdateAuthor = { id: faker.string.uuid(), name: faker.person.fullName(), bio: faker.lorem.paragraph() };
+                        const response = await authorRequests.update(data);
+                        const { status, ...body } = AUTHOR_ERRORS.notFound;
+
+                        expect(response.status).toBe(status);
+                        expect(response.body).toEqual(body);
+                });
+
+                test("An author with the same name already exist", async () => {
+                        let data: CreateAuthor = { name: faker.person.fullName(), bio: faker.lorem.paragraph() };
+                        const authorA = (await authorRequests.create(data)).body;
+
+                        data = { name: faker.person.fullName(), bio: faker.lorem.paragraph() };
+                        const authorB = (await authorRequests.create(data)).body;
+
+                        const response = await authorRequests.update({ id: authorB.id, name: authorA.name, bio: authorB.bio });
+
+                        const { status, ...body } = AUTHOR_ERRORS.duplicated;
 
                         expect(response.status).toBe(status);
                         expect(response.body).toEqual(body);
