@@ -10,4 +10,5 @@ afterAll(async () => {
 
 afterEach(async () => {
         await prisma.author.deleteMany();
+        await prisma.book.deleteMany();
 });

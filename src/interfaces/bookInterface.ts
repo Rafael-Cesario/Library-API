@@ -11,4 +11,4 @@ export const CreateBookSchema = z.object({
         authors: z.array(z.uuid()).optional().default([]),
 });
 
-export type CreateBook = z.infer<typeof CreateBookSchema>;
+export type CreateBook = z.input<typeof CreateBookSchema>;

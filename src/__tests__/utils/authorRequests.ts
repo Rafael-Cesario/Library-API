@@ -16,7 +16,9 @@ export class AuthorRequests {
                         promises.push(this.create({ name: faker.person.fullName(), bio: faker.lorem.paragraph() }));
                 }
 
-                await Promise.all(promises);
+                const response = await Promise.all(promises);
+
+                return response;
         }
 
         async read() {
