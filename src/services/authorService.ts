@@ -1,6 +1,6 @@
 import { AUTHOR_ERRORS } from "../errors/authorErrors";
 import { CustomError } from "../errors/customError";
-import { CreateAuthorSchema, UpdateAuthorSchema, type CreateAuthor, type UpdateAuthor } from "../interfaces/authorInterface";
+import { CreateAuthorSchema, DeleteAuthorSchema, UpdateAuthorSchema, type CreateAuthor, type DeleteAuthor, type UpdateAuthor } from "../interfaces/authorInterface";
 import { prisma } from "../prisma";
 
 export class AuthorService {
@@ -40,5 +40,15 @@ export class AuthorService {
                 const newAuthor = await prisma.author.update({ where: { id: authorData.id }, data: authorData });
 
                 return newAuthor;
+        }
+
+        async delete(data: DeleteAuthor) {
+                const authorData = DeleteAuthorSchema.parse(data);
+
+                const findAuthor = await prisma.author.findUnique({ where: { id: authorData.id } });
+                if (!findAuthor) throw new CustomError(AUTHOR_ERRORS.notFound);
+
+                const author = await prisma.author.delete({ where: { id: authorData.id } });
+                return author;
         }
 }
