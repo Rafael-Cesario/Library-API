@@ -12,5 +12,11 @@ Author
     - Read + tests
     - ReadOne + tests
     - Update
-    > Delete
+    - Delete
+
+book
+    - Create
+    - Read 
+    - Update 
+    - Delete
     

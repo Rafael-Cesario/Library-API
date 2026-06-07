@@ -1,7 +1,7 @@
-interface ICustomError {
-        message: string;
-        code: string;
+export interface ICustomError {
         status: number;
+        code: string;
+        message: string;
 }
 
 export class CustomError extends Error {

@@ -8,10 +8,10 @@ datasource db {
 }
 
 model Book {
-  id          String   @id @default(uuid())
+  id          String @id @default(uuid())
   title       String
   pages       Int
-  publishedAt DateTime
+  publishedAt String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
