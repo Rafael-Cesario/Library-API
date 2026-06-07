@@ -173,4 +173,53 @@ describe("Author Routes", () => {
                         expect(response.body).toEqual(body);
                 });
         });
+
+        describe("Delete", () => {
+                test("Deletes an author", async () => {
+                        const data = { name: faker.person.fullName(), bio: faker.lorem.paragraph() };
+
+                        let response = await authorRequests.create(data);
+                        let author = response.body;
+
+                        let authors = await prisma.author.findMany({});
+                        expect(authors.length).toBe(1);
+
+                        response = await authorRequests.delete({ id: author.id });
+                        author = response.body;
+
+                        authors = await prisma.author.findMany({});
+                        expect(authors.length).toBe(0);
+
+                        expect(author.name).toBe(data.name);
+                });
+
+                test("Id is required", async () => {
+                        const response = await authorRequests.delete({});
+
+                        expect(response.status).toBe(400);
+                        expect(response.body).toEqual({
+                                fieldErrors: { id: ["Invalid input: expected string, received undefined"] },
+                                formErrors: [],
+                        });
+                });
+
+                test("Id is invalid", async () => {
+                        const response = await authorRequests.delete({ id: "123" });
+
+                        expect(response.status).toBe(400);
+                        expect(response.body).toEqual({
+                                fieldErrors: { id: ["Invalid UUID"] },
+                                formErrors: [],
+                        });
+                });
+
+                test("Author not found", async () => {
+                        const response = await authorRequests.delete({ id: faker.string.uuid() });
+
+                        const { status, ...body } = AUTHOR_ERRORS.notFound;
+
+                        expect(response.status).toBe(status);
+                        expect(response.body).toEqual(body);
+                });
+        });
 });

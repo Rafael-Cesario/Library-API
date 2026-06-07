@@ -1,7 +1,7 @@
 import request from "supertest";
 import app from "../../app";
 import { faker } from "@faker-js/faker";
-import type { CreateAuthor, UpdateAuthor } from "../../interfaces/authorInterface";
+import type { CreateAuthor, DeleteAuthor, UpdateAuthor } from "../../interfaces/authorInterface";
 
 export class AuthorRequests {
         async create(data: Partial<CreateAuthor>) {
@@ -31,6 +31,11 @@ export class AuthorRequests {
 
         async update(data: Partial<UpdateAuthor>) {
                 const response = await request(app).put("/authors").send(data);
+                return response;
+        }
+
+        async delete(data: Partial<DeleteAuthor>) {
+                const response = await request(app).delete("/authors").send(data);
                 return response;
         }
 }
