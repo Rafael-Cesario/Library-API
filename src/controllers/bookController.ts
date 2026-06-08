@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import type { BookService } from "../services/bookService";
-import type { CreateBook } from "../interfaces/bookInterface";
+import type { CreateBook, UpdateBook } from "../interfaces/bookInterface";
 
 export class BookController {
         constructor(private bookService: BookService) {}
@@ -19,6 +19,12 @@ export class BookController {
         async readOne(req: Request, res: Response) {
                 const id = req.params["id"] as string;
                 const book = await this.bookService.readOne(id);
+                res.status(200).json(book);
+        }
+
+        async update(req: Request, res: Response) {
+                const data: UpdateBook = req.body;
+                const book = await this.bookService.update(data);
                 res.status(200).json(book);
         }
 }

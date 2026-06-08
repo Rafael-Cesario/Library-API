@@ -1,6 +1,6 @@
 import { BOOK_ERRORS } from "../errors/bookErrors";
 import { CustomError } from "../errors/customError";
-import { CreateBookSchema, type CreateBook } from "../interfaces/bookInterface";
+import { CreateBookSchema, UpdateBookSchema, type CreateBook, type UpdateBook } from "../interfaces/bookInterface";
 import { prisma } from "../prisma";
 
 export class BookService {
@@ -28,6 +28,26 @@ export class BookService {
         async readOne(id: string) {
                 const book = await prisma.book.findUnique({ where: { id }, include: { authors: true } });
                 if (!book) throw new CustomError(BOOK_ERRORS.notFound);
+                return book;
+        }
+
+        async update(data: UpdateBook) {
+                const bookData = UpdateBookSchema.parse(data);
+
+                const hasBook = await prisma.book.findUnique({ where: { id: bookData.id } });
+                if (!hasBook) throw new CustomError(BOOK_ERRORS.notFound);
+
+                const hasAuthors = bookData.authors.length > 0;
+                if (hasAuthors) await this.validateAuthors(bookData.authors);
+
+                const authorsSet = { set: bookData.authors.map((id) => ({ id })) };
+
+                const book = await prisma.book.update({
+                        where: { id: bookData.id },
+                        data: { ...bookData, authors: authorsSet },
+                        include: { authors: true },
+                });
+
                 return book;
         }
 

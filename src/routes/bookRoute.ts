@@ -9,5 +9,6 @@ const bookController = new BookController(bookService);
 route.post("/", (req, res) => bookController.create(req, res));
 route.get("/", (req, res) => bookController.read(req, res));
 route.get("/:id", (req, res) => bookController.readOne(req, res));
+route.put("/", (req, res) => bookController.update(req, res));
 
 export { route as bookRoutes };
