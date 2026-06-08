@@ -3,7 +3,7 @@ import { BookRequests } from "./utils/bookRequests";
 import { prisma } from "../prisma";
 import { AuthorRequests } from "./utils/authorRequests";
 import { BOOK_ERRORS } from "../errors/bookErrors";
-import type { CreateBook } from "../interfaces/bookInterface";
+import type { CreateBook, UpdateBook } from "../interfaces/bookInterface";
 
 describe("Book Routes", () => {
         const authorRequests = new AuthorRequests();
@@ -119,6 +119,46 @@ describe("Book Routes", () => {
 
                         expect(response.status).toBe(status);
                         expect(response.body).toEqual(body);
+                });
+        });
+
+        describe("Update", () => {
+                test("Update a book and its authors", async () => {
+                        const authorsResponse = await authorRequests.createMany(2);
+                        const [authorA, authorB] = authorsResponse.map((author) => author.body);
+
+                        const [bookResponse] = await bookRequests.createMany(1);
+                        const book = bookResponse?.body;
+
+                        const newData: UpdateBook = {
+                                id: book.id,
+                                title: faker.book.title(),
+                                pages: faker.number.int({ min: 50, max: 400 }),
+                                publishedAt: faker.date.past().getTime(),
+                                authors: [authorA.id, authorB.id],
+                        };
+
+                        const response = await bookRequests.update(newData);
+
+                        expect(response.status).toBe(200);
+
+                        expect(response.body).toEqual(
+                                expect.objectContaining({
+                                        id: newData.id,
+                                        title: newData.title,
+                                        pages: newData.pages,
+                                        publishedAt: String(newData.publishedAt),
+                                        authors: expect.any(Array),
+                                        createdAt: expect.any(String),
+                                        updatedAt: expect.any(String),
+                                }),
+                        );
+
+                        expect(response.body.authors.length).toBe(2);
+
+                        const authorsIds = response.body.authors.map((author: { id: string }) => author.id);
+
+                        expect(authorsIds).toEqual(expect.arrayContaining([authorA.id, authorB.id]));
                 });
         });
 });

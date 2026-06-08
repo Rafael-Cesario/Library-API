@@ -1,6 +1,6 @@
 import request from "supertest";
 import app from "../../app";
-import type { CreateBook } from "../../interfaces/bookInterface";
+import type { CreateBook, UpdateBook } from "../../interfaces/bookInterface";
 import { faker } from "@faker-js/faker";
 import { AuthorRequests } from "./authorRequests";
 
@@ -45,6 +45,11 @@ export class BookRequests {
 
         async readOne(id: string) {
                 const response = await request(app).get(`/books/${id}`);
+                return response;
+        }
+
+        async update(data: UpdateBook) {
+                const response = await request(app).put("/books").send(data);
                 return response;
         }
 }
