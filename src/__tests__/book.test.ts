@@ -80,4 +80,45 @@ describe("Book Routes", () => {
                         expect(response.body).toEqual(body);
                 });
         });
+
+        describe("Read", () => {
+                test("Read all books", async () => {
+                        const totalBooks = 5;
+
+                        await bookRequests.createMany(totalBooks);
+
+                        const response = await bookRequests.read();
+
+                        expect(response.status).toBe(200);
+                        expect(response.body.length).toBe(totalBooks);
+                        expect(response.body[0]).toHaveProperty("authors");
+                });
+
+                test("Gets an empty array", async () => {
+                        const response = await bookRequests.read();
+                        expect(response.status).toBe(200);
+                        expect(response.body).toEqual([]);
+                });
+        });
+
+        describe("Read One", () => {
+                test("Read One book", async () => {
+                        const bookResponse = await bookRequests.createMany(1);
+                        const { id, title, authors } = bookResponse[0]?.body;
+
+                        const response = await bookRequests.readOne(id);
+
+                        expect(response.status).toBe(200);
+                        expect(response.body.title).toBe(title);
+                        expect(response.body.authors).toEqual(authors);
+                });
+
+                test("Book not found", async () => {
+                        const response = await bookRequests.readOne(faker.string.uuid());
+                        const { status, ...body } = BOOK_ERRORS.notFound;
+
+                        expect(response.status).toBe(status);
+                        expect(response.body).toEqual(body);
+                });
+        });
 });
