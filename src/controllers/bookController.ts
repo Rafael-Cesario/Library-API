@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import type { BookService } from "../services/bookService";
-import type { CreateBook, UpdateBook } from "../interfaces/bookInterface";
+import type { CreateBook, DeleteBook, UpdateBook } from "../interfaces/bookInterface";
 
 export class BookController {
         constructor(private bookService: BookService) {}
@@ -25,6 +25,12 @@ export class BookController {
         async update(req: Request, res: Response) {
                 const data: UpdateBook = req.body;
                 const book = await this.bookService.update(data);
+                res.status(200).json(book);
+        }
+
+        async delete(req: Request, res: Response) {
+                const data: DeleteBook = req.body;
+                const book = await this.bookService.delete(data);
                 res.status(200).json(book);
         }
 }

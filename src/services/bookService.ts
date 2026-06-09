@@ -1,6 +1,6 @@
 import { BOOK_ERRORS } from "../errors/bookErrors";
 import { CustomError } from "../errors/customError";
-import { CreateBookSchema, UpdateBookSchema, type CreateBook, type UpdateBook } from "../interfaces/bookInterface";
+import { CreateBookSchema, DeleteBookSchema, UpdateBookSchema, type CreateBook, type DeleteBook, type UpdateBook } from "../interfaces/bookInterface";
 import { prisma } from "../prisma";
 
 export class BookService {
@@ -47,6 +47,17 @@ export class BookService {
                         data: { ...bookData, authors: authorsSet },
                         include: { authors: true },
                 });
+
+                return book;
+        }
+
+        async delete(data: DeleteBook) {
+                const bookData = DeleteBookSchema.parse(data);
+
+                const hasBook = await prisma.book.findUnique({ where: { id: bookData.id } });
+                if (!hasBook) throw new CustomError(BOOK_ERRORS.notFound);
+
+                const book = await prisma.book.delete({ where: { id: bookData.id } });
 
                 return book;
         }

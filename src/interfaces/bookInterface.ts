@@ -23,5 +23,10 @@ export const UpdateBookSchema = z.object({
         authors: z.array(z.uuid()).optional().default([]),
 });
 
+export const DeleteBookSchema = z.object({
+        id: z.uuid(),
+});
+
 export type CreateBook = z.input<typeof CreateBookSchema>;
 export type UpdateBook = z.input<typeof UpdateBookSchema>;
+export type DeleteBook = z.input<typeof DeleteBookSchema>;
