@@ -206,4 +206,34 @@ describe("Book Routes", () => {
                         expect(response.body).toEqual(body);
                 });
         });
+
+        describe("Delete", () => {
+                test("Deletes a book", async () => {
+                        const bookResponse = await bookRequests.createMany(1);
+                        const book = bookResponse[0]?.body;
+
+                        const response = await bookRequests.delete({ id: book.id });
+
+                        delete book.authors;
+
+                        expect(response.status).toBe(200);
+                        expect(response.body).toEqual(book);
+                });
+
+                test("Id is invalid", async () => {
+                        const response = await bookRequests.delete({ id: "123" });
+                        
+                        expect(response.status).toBe(400);
+                        expect(response.body.fieldErrors).toEqual({ id: [ 'Invalid UUID' ] });
+                })
+
+                test("Book not found", async () => {
+                        const response = await bookRequests.delete({ id: faker.string.uuid() });
+
+                        const { status, ...body } = BOOK_ERRORS.notFound;
+
+                        expect(response.status).toBe(status);
+                        expect(response.body).toEqual(body);
+                })
+        });
 });

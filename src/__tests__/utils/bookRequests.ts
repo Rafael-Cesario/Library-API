@@ -1,6 +1,6 @@
 import request from "supertest";
 import app from "../../app";
-import type { CreateBook, UpdateBook } from "../../interfaces/bookInterface";
+import type { CreateBook, DeleteBook, UpdateBook } from "../../interfaces/bookInterface";
 import { faker } from "@faker-js/faker";
 import { AuthorRequests } from "./authorRequests";
 
@@ -50,6 +50,11 @@ export class BookRequests {
 
         async update(data: Partial<UpdateBook>) {
                 const response = await request(app).put("/books").send(data);
+                return response;
+        }
+
+        async delete(data: Partial<DeleteBook>) {
+                const response = await request(app).delete("/books").send(data);
                 return response;
         }
 }
