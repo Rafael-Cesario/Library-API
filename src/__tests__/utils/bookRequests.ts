@@ -48,7 +48,7 @@ export class BookRequests {
                 return response;
         }
 
-        async update(data: UpdateBook) {
+        async update(data: Partial<UpdateBook>) {
                 const response = await request(app).put("/books").send(data);
                 return response;
         }

@@ -160,5 +160,50 @@ describe("Book Routes", () => {
 
                         expect(authorsIds).toEqual(expect.arrayContaining([authorA.id, authorB.id]));
                 });
+
+                test("Invalid request body", async () => {
+                        const response = await bookRequests.update({ id: "123" });
+
+                        expect(response.body.fieldErrors).toEqual({
+                                id: ["Invalid UUID"],
+                                title: ["Invalid input: expected string, received undefined"],
+                                pages: ["Invalid input: expected number, received undefined"],
+                                publishedAt: ["Invalid input: expected number, received undefined"],
+                        });
+                });
+
+                test("Book not found", async () => {
+                        const data: UpdateBook = {
+                                id: faker.string.uuid(),
+                                pages: faker.number.int({ min: 50, max: 400 }),
+                                publishedAt: faker.date.past().getTime(),
+                                title: faker.book.title(),
+                        };
+
+                        const response = await bookRequests.update(data);
+
+                        const { status, ...body } = BOOK_ERRORS.notFound;
+
+                        expect(response.status).toBe(status);
+                        expect(response.body).toEqual(body);
+                });
+
+                test("Author not found", async () => {
+                        const bookResponse = await bookRequests.createMany(1);
+                        const book = bookResponse[0]?.body;
+
+                        const data: UpdateBook = {
+                                ...book,
+                                publishedAt: faker.date.past().getTime(),
+                                authors: [faker.string.uuid()],
+                        };
+
+                        const response = await bookRequests.update(data);
+
+                        const { status, ...body } = BOOK_ERRORS.authorsNotFound;
+
+                        expect(response.status).toBe(status);
+                        expect(response.body).toEqual(body);
+                });
         });
 });
