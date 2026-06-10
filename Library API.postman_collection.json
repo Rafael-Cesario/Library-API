@@ -1,0 +1,275 @@
+{
+  "info": {
+    "_postman_id": "b88d983e-f9df-4669-aaf6-df84c3d07cef",
+    "name": "Library API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "28745329"
+  },
+  "item": [
+    {
+      "name": "Authors",
+      "item": [
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"{{$randomFullName}}\",\r\n    \"bio\": \"{{$randomLoremParagraph}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/authors",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "authors"
+              ]
+            },
+            "description": "### Get Author Information\n\nThis endpoint retrieves information about authors from the system. It is a simple HTTP GET request that does not require any input parameters.\n\n#### Request\n\n- **Method**: GET\n    \n- **Endpoint**: `{{URL}}/author`\n    \n\n#### Response\n\n- **Status Code**: 200 OK\n    \n- **Content-Type**: application/json\n    \n- { \"hello\": \"\"}\n    \n\nThe response body contains a JSON object with a key `\"hello\"`, which currently returns an empty string. This may be used as a placeholder for future author-related data or messages."
+          },
+          "response": []
+        },
+        {
+          "name": "Read",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"{{$randomFullName}}\",\r\n    \"bio\": \"{{$randomLoremParagraph}}\"\r\n}"
+            },
+            "url": {
+              "raw": "{{URL}}/authors",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "authors"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ReadOne",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"{{$randomFullName}}\",\r\n    \"bio\": \"{{$randomLoremParagraph}}\"\r\n}"
+            },
+            "url": {
+              "raw": "{{URL}}/authors/403f461c-b783-4273-971e-916b819b6af9",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "authors",
+                "403f461c-b783-4273-971e-916b819b6af9"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": \"35d0d54e-a345-4f86-9335-a4a575dd894d\",\r\n    \"name\": \"Lucille Williamson\",\r\n    \"bio\": \"{{$randomLoremParagraph}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/authors",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "authors"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": \"6a24e73a-de39-47ef-b582-ae74fc014007\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/authors",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "authors"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Books",
+      "item": [
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"{{$randomPhrase}}\",\r\n    \"pages\": {{$randomInt}},\r\n    \"publishedAt\": {{$timestamp}},\r\n    \"authors\": [\r\n        \"403f461c-b783-4273-971e-916b819b6af9\"\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/books",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "books"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Read",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"{{$randomPhrase}}\",\r\n    \"pages\": {{$randomInt}},\r\n    \"publishedAt\": {{$timestamp}},\r\n    \"authors\": [\r\n        \"403f461c-b783-4273-971e-916b819b6af9\"\r\n    ]\r\n}"
+            },
+            "url": {
+              "raw": "{{URL}}/books",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "books"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ReadOne",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"{{$randomPhrase}}\",\r\n    \"pages\": {{$randomInt}},\r\n    \"publishedAt\": {{$timestamp}},\r\n    \"authors\": [\r\n        \"403f461c-b783-4273-971e-916b819b6af9\"\r\n    ]\r\n}"
+            },
+            "url": {
+              "raw": "{{URL}}/books/754f2571-8eea-431c-b991-23eac723e02b",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "books",
+                "754f2571-8eea-431c-b991-23eac723e02b"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": \"1165ab76-a3f9-496e-ae78-fb881f7aae10\",\r\n    \"title\": \"{{$randomPhrase}}\",\r\n    \"pages\": {{$randomInt}},\r\n    \"publishedAt\": {{$timestamp}},\r\n    \"authors\": [\r\n        \"403f461c-b783-4273-971e-916b819b6af9\",\r\n        \"1c273bd5-b5fa-4733-9f98-2f1b206fc138\"\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/books",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "books"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": \"44ed4601-b07e-4086-8393-f65f028172fe\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/books",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "books"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
